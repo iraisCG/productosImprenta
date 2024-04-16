@@ -1,0 +1,13 @@
+.infoTarjeta{
+    margin: 5px;
+}
+
+.productosInfo{
+    width: 80%;
+    display: flex;
+    flex-wrap: row wrap;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+
