@@ -1,88 +1,126 @@
-//Agregar nuevos productos
 
-class agregarProductos{
-    constructor (nombre, imagen, precio, piezas){
-        this.imagen = imagen
-        this.nombre = nombre
-        this.precio = precio
-        this.piezas = piezas
+
+const data = [
+    { imageP: './medios/pantalla_serigrafia.jpg', nombreP: 'Pantalla de serigrafía', precioP: 230, piezasP: 15},
+    { imageP: './medios/acondicionador_serigrafia.jpg', nombreP: 'Acondicionador', precioP: 250, piezasP: 50},
+    { imageP: './medios/racleta_serigrafia.jpg', nombreP: 'Racleta', precioP: 150, piezasP: 100},
+    { imageP: './medios/espatuta_serigrafia.jpg', nombreP: 'Espatula', precioP: 80, piezasP: 150},
+    { imageP: './medios/bicromato.webp', nombreP: 'Bicromato', precioP: 120, piezasP: 120},
+    { imageP: './medios/aplicador.webp', nombreP: 'Aplicador de emulsión', precioP: 400, piezasP: 51},
+    { imageP: './medios/emulsion_serigrafia.jpg', nombreP: 'Emulsión de serigrafía', precioP: 340, piezasP: 81},
+    { imageP: './medios/serisol.webp', nombreP: 'Serisol', precioP: 180, piezasP: 10}
+];
+
+localStorage.setItem('productos', JSON.stringify(data));
+
+//función crear tarjetas
+function tarjetaProducto(data){
+    const cardContainer = document.getElementById('cards-container');
+
+    data.forEach(item => {
+
+
+        const tarjeta = document.createElement('div');
+        tarjeta.classList.add('tarjeta');
+
+        const imagen = document.createElement('img');
+        imagen.src = item.imageP;
+
+        const nombre = document.createElement('h2');
+        nombre.textContent = item.nombreP;
+
+        const precio = document.createElement('h3');
+        precio.textContent = `Precio: $${item.precioP}`;
+
+        const pieza = document.createElement('h4');
+        pieza.textContent = `Piezas: ${item.piezasP}`;
+
+        const venderButton = document.createElement('button');
+        venderButton.textContent = 'Vender';
+        venderButton.addEventListener('click', () => venderProducto(item, pieza, venderButton));
+
+        tarjeta.appendChild(imagen);
+        tarjeta.appendChild(nombre);
+        tarjeta.appendChild(precio);
+        tarjeta.appendChild(pieza);
+        tarjeta.appendChild(venderButton);
+
+        cardContainer.appendChild(tarjeta);
+    });
+
+
+}
+//Función seleccionar los productos vendidos
+function venderProducto(producto, piezaElement, buttonElement) {
+    if (producto.piezasP > 0) {
+        producto.piezasP--;
+        piezaElement.textContent = `Piezas: ${producto.piezasP}`;
+        actualizarLocalStorage();
+        if (producto.piezasP === 0) {
+            buttonElement.disabled = true;
+        }
+        mostrarProductosVendidos(producto);
     }
 }
 
-
-const productosDatos = [
-    { nombre: 'Pantalla de serigrafía', precio: 230, piezas: 1},
-    { nombre: 'Acondicionador', precio: 250, piezas: 1},
-    { nombre: 'Racleta', precio: 150, piezas: 1},
-    { nombre: 'Espatula', precio: 80, piezas: 1},
-    { nombre: 'Bicromato', precio: 120, piezas: 1},
-    { nombre: 'Aplicador de emulsión', precio: 400, piezas: 1},
-    { nombre: 'Emulsión de serigrafía', precio: 340, piezas: 1},
-    { nombre: 'Serisol', precio: 180, piezas: 1}
-];
-
-
-
-
-function crearContenedor(producto) {
-    let contenedor = document.createElement("div");
-    contenedor.innerHTML = `<h1>Nombre: ${producto.nombre}</h1> 
-    <h2>Precio: ${producto.precio}</h2> 
-    <p>Piezas: ${producto.piezas}</p>`;
-    return contenedor;
+function actualizarLocalStorage() {
+    const productosEnLocalStorage = JSON.parse(localStorage.getItem('productos'));
+    localStorage.setItem('productos', JSON.stringify(productosEnLocalStorage));
 }
 
-const cardBody1 = document.querySelector(".info");
-const cardBody2 = document.querySelector(".info2");
-const cardBody3 = document.querySelector(".info3");
-const cardBody4 = document.querySelector(".info4");
-const cardBody5 = document.querySelector(".info5");
-const cardBody6 = document.querySelector(".info6");
-const cardBody7 = document.querySelector(".info7");
-const cardBody8 = document.querySelector(".info8");
+//Mostrar los productos que se van seleccionando
+function mostrarProductosVendidos(producto) {
+    const productosVendidosContainer = document.getElementById('productos-vendidos');
+    const productoVendidoDiv = document.createElement('div');
+    productoVendidoDiv.textContent = `${producto.nombreP} - Precio: $${producto.precioP}`;
+    productosVendidosContainer.appendChild(productoVendidoDiv);
 
-
-for (let i = 0; i < 1; i++) {
-    const contenedor1 = crearContenedor(productosDatos[i]);
-    cardBody1.appendChild(contenedor1);
+    mostrarPrecioTotal();
 }
 
-for (let i = 1; i < 2; i++) {
-    const contenedor2 = crearContenedor(productosDatos[i]);
-   cardBody2.appendChild(contenedor2);
+//Sumar el precio de los productos seleccionados
+function sumarPrecioProductosVendidos() {
+    const productosVendidos = document.querySelectorAll('#productos-vendidos div');
+    let precioTotal = 0;
+
+    productosVendidos.forEach(producto => {
+        const precioTexto = producto.textContent.split(' - Precio: $')[1];
+        const precio = parseFloat(precioTexto);
+        precioTotal += precio;
+    });
+
+    return precioTotal;
 }
 
-for (let i = 2; i < 3; i++) {
-    const contenedor3 = crearContenedor(productosDatos[i]);
-    cardBody3.appendChild(contenedor3);
+//Mostar el precio total de los productos seleccionados
+function mostrarPrecioTotal() {
+    const precioTotal = sumarPrecioProductosVendidos();
+    const precioTotalContainer = document.getElementById('precio-total-vendidos');
+    
+    
+    precioTotalContainer.innerHTML = '';
+
+    
+    const precioTotalDiv = document.createElement('div');
+    precioTotalDiv.textContent = `Precio total de productos vendidos: $${precioTotal}`;
+
+    
+    precioTotalContainer.appendChild(precioTotalDiv);
 }
 
-for (let i = 3; i < 4; i++) {
-    const contenedor4 = crearContenedor(productosDatos[i]);
-    cardBody4.appendChild(contenedor4);
-}
 
-for (let i = 4; i < 5; i++) {
-    const contenedor5 = crearContenedor(productosDatos[i]);
-    cardBody5.appendChild(contenedor5);
-}
+tarjetaProducto(data);
+mostrarPrecioTotal();
 
-for (let i = 5; i < 6; i++) {
-    const contenedor6 = crearContenedor(productosDatos[i]);
-    cardBody6.appendChild(contenedor6);
-}
 
-for (let i = 6; i < 7; i++) {
-    const contenedor7 = crearContenedor(productosDatos[i]);
-    cardBody7.appendChild(contenedor7);
-}
 
-for (let i = 7; i < 8; i++) {
-    const contenedor8 = crearContenedor(productosDatos[i]);
-    cardBody8.appendChild(contenedor8);
-}
 
-const productosJSON = JSON.stringify(productosDatos);
 
-localStorage.setItem('productos', productosJSON);
+
+
+
+
+
+
+
 
