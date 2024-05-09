@@ -1,0 +1,61 @@
+{
+    "dataProductos": [
+        {
+            "imageP": "./medios/pantalla_serigrafia.jpg", 
+            "nombreP": "Pantalla de serigrafía", 
+            "precioP": 230, 
+            "piezasP": 15
+        },
+
+        {
+            "imageP": "./medios/acondicionador_serigrafia.jpg", 
+            "nombreP": "Acondicionador", 
+            "precioP": 250, 
+            "piezasP": 50
+        },
+
+        {
+            "imageP": "./medios/racleta_serigrafia.jpg", 
+            "nombreP": "Racleta", 
+            "precioP": 150, 
+            "piezasP": 100
+        },
+
+        {
+            "imageP": "./medios/espatuta_serigrafia.jpg", 
+            "nombreP": "Espatula", 
+            "precioP": 80, 
+            "piezasP": 150
+        },
+
+        {
+            "imageP": "./medios/bicromato.webp", 
+            "nombreP": "Bicromato", 
+            "precioP": 120, 
+            "piezasP": 120
+        },
+
+        {
+            "imageP": "./medios/aplicador.webp", 
+            "nombreP": "Aplicador de emulsión", 
+            "precioP": 400, 
+            "piezasP": 51
+        },
+
+        {
+            "imageP": "./medios/emulsion_serigrafia.jpg", 
+            "nombreP": "Emulsión de serigrafía", 
+            "precioP": 340, 
+            "piezasP": 81
+        },
+
+        {
+            "imageP": "./medios/serisol.webp", 
+            "nombreP": "Serisol", 
+            "precioP": 180, 
+            "piezasP": 10
+        }
+
+
+    ]
+}

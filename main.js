@@ -1,17 +1,8 @@
 
 
-const data = [
-    { imageP: './medios/pantalla_serigrafia.jpg', nombreP: 'Pantalla de serigrafía', precioP: 230, piezasP: 15},
-    { imageP: './medios/acondicionador_serigrafia.jpg', nombreP: 'Acondicionador', precioP: 250, piezasP: 50},
-    { imageP: './medios/racleta_serigrafia.jpg', nombreP: 'Racleta', precioP: 150, piezasP: 100},
-    { imageP: './medios/espatuta_serigrafia.jpg', nombreP: 'Espatula', precioP: 80, piezasP: 150},
-    { imageP: './medios/bicromato.webp', nombreP: 'Bicromato', precioP: 120, piezasP: 120},
-    { imageP: './medios/aplicador.webp', nombreP: 'Aplicador de emulsión', precioP: 400, piezasP: 51},
-    { imageP: './medios/emulsion_serigrafia.jpg', nombreP: 'Emulsión de serigrafía', precioP: 340, piezasP: 81},
-    { imageP: './medios/serisol.webp', nombreP: 'Serisol', precioP: 180, piezasP: 10}
-];
-
-localStorage.setItem('productos', JSON.stringify(data));
+function actualizarLocalStorage() {
+    localStorage.setItem('productos', JSON.stringify(data));
+}
 
 //función crear tarjetas
 function tarjetaProducto(data){
@@ -97,20 +88,91 @@ function mostrarPrecioTotal() {
     const precioTotal = sumarPrecioProductosVendidos();
     const precioTotalContainer = document.getElementById('precio-total-vendidos');
     
-    
     precioTotalContainer.innerHTML = '';
 
-    
     const precioTotalDiv = document.createElement('div');
     precioTotalDiv.textContent = `Precio total de productos vendidos: $${precioTotal}`;
-
     
+    // Crreación del botón terminar venta
+    const terminarVentaButton = document.createElement('button');
+    terminarVentaButton.textContent = 'Terminar Venta';
+    terminarVentaButton.addEventListener('click', terminarVenta);
+
     precioTotalContainer.appendChild(precioTotalDiv);
+    precioTotalContainer.appendChild(terminarVentaButton);
+}
+
+// Función terminar venta
+function terminarVenta() {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Quieres terminar la venta?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, terminar venta',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //  Confirmar venta 
+            console.log('Venta terminada');
+            Swal.fire('¡Venta terminada!', '', 'success');
+
+            // Borrar suma y actualizar el precio total a cero
+            const precioTotalContainer = document.getElementById('precio-total-vendidos');
+            precioTotalContainer.innerHTML = '';
+
+
+            const precioTotalDiv = document.createElement('div');
+            precioTotalDiv.textContent = `Precio total de productos vendidos: $0`;
+
+            precioTotalContainer.appendChild(precioTotalDiv);
+
+            // Borrar productos seleccionados
+            const productosVendidosContainer = document.getElementById('productos-vendidos');
+            productosVendidosContainer.innerHTML = '';
+        } else {
+            // Cancelar venta
+            console.log('Venta cancelada');
+            Swal.fire('¡Venta cancelada!', '', 'error');
+
+
+            // Recargar la página
+            window.location.reload();
+            
+        }
+    });
 }
 
 
-tarjetaProducto(data);
-mostrarPrecioTotal();
+
+// Llamar el documento JSON con fetch
+fetch("./listaProductos.json")
+  .then(response => {
+    // Verificar si la solicitud 
+    if (!response.ok) {
+      throw new Error("Hubo un problema al obtener el documento JSON")
+    }
+    else{
+        
+    return response.json()
+    }
+    
+  })
+
+  
+  .then(data => {
+    console.log(data.dataProductos)
+    // crear las tarjetas de productos y mostrar el precio total
+    tarjetaProducto(data.dataProductos);
+    mostrarPrecioTotal();
+  })
+  .catch(error => {
+    // error que ocurra durante el proceso
+    console.error('Error:', error);
+  });
+
+
+
 
 
 
